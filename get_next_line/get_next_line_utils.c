@@ -6,7 +6,7 @@
 /*   By: zgahrama <zgahrama@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 11:02:35 by zgahrama          #+#    #+#             */
-/*   Updated: 2025/06/12 16:02:27 by zgahrama         ###   ########.fr       */
+/*   Updated: 2025/06/12 17:27:36 by zgahrama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,10 @@ char	*extract_line(char *leftover)
 		i++;
 	}
 	if (leftover[i] == '\n')
-		line[i] = '\n';
-	line[++i] = '\0';
+	{
+		line[i] = '\n', i++;
+	}
+	line[i] = '\0';
 	return (line);
 }
 

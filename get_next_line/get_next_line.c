@@ -6,7 +6,7 @@
 /*   By: zgahrama <zgahrama@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 14:48:13 by zgahrama          #+#    #+#             */
-/*   Updated: 2025/06/12 16:05:03 by zgahrama         ###   ########.fr       */
+/*   Updated: 2025/06/12 17:19:16 by zgahrama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*init_leftover(char *leftover, char *buffer)
 	if (!leftover)
 	{
 		free(buffer);
-		return (0);
+		return (NULL);
 	}
 	leftover[0] = '\0';
 	return (leftover);
@@ -28,6 +28,7 @@ char	*read_and_append(int fd, char *leftover, char *buffer)
 {
 	int		bytes_read;
 	char	*tmp;
+
 	bytes_read = 1;
 	while (!ft_strchr(leftover, '\n') && bytes_read > 0)
 	{
@@ -49,6 +50,8 @@ char	*get_next_line(int fd)
 	char		*buffer;
 	char		*line;
 
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
 	buffer = malloc(BUFFER_SIZE + 1);
 	if (!buffer)
 		return (0);
