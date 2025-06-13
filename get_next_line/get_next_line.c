@@ -6,7 +6,7 @@
 /*   By: zgahrama <zgahrama@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 14:48:13 by zgahrama          #+#    #+#             */
-/*   Updated: 2025/06/13 13:09:05 by zgahrama         ###   ########.fr       */
+/*   Updated: 2025/06/13 13:41:15 by zgahrama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,27 +71,40 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (concatenated);
 }
 
+char	*prepare_leftover(int fd, char **leftover)
+{
+	char	*buffer;
+
+	buffer = malloc(BUFFER_SIZE + 1);
+	if (!buffer)
+		return (NULL);
+	if (!*leftover)
+	{
+		*leftover = init_leftover(*leftover, buffer);
+		if (!*leftover)
+		{
+			free(buffer);
+			return (NULL);
+		}
+	}
+	*leftover = read_and_append(fd, *leftover, buffer);
+	free(buffer);
+	return (*leftover);
+}
+
 char	*get_next_line(int fd)
 {
 	static char	*leftover;
-	char		*buffer;
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	buffer = malloc(BUFFER_SIZE + 1);
-	if (!buffer)
-		return (0);
-	if (!leftover)
+	if (!prepare_leftover(fd, &leftover) || !leftover || leftover[0] == '\0')
 	{
-		leftover = init_leftover(leftover, buffer);
-		if (!leftover)
-			return (0);
+		free(leftover);
+		leftover = NULL;
+		return (NULL);
 	}
-	leftover = read_and_append(fd, leftover, buffer);
-	free(buffer);
-	if (!leftover || leftover[0] == '\0')
-		return (0);
 	line = extract_line(leftover);
 	leftover = update_leftover(leftover);
 	return (line);
