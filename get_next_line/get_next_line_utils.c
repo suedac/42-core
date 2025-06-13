@@ -6,7 +6,7 @@
 /*   By: zgahrama <zgahrama@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 11:02:35 by zgahrama          #+#    #+#             */
-/*   Updated: 2025/06/12 17:27:36 by zgahrama         ###   ########.fr       */
+/*   Updated: 2025/06/13 13:26:24 by zgahrama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,37 +39,23 @@ size_t	ft_strlen(const char *str)
 	return (i);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+static int	copy_until_newline(char *dst, char *src)
 {
-	size_t	lens1;
-	size_t	lens2;
-	char	*concatenated;
-	size_t	i;
+	int	i;
 
-	lens1 = ft_strlen(s1);
-	lens2 = ft_strlen(s2);
-	concatenated = malloc(lens1 + lens2 + 1);
-	if (!concatenated)
-		return (0);
 	i = 0;
-	while (i < lens1)
+	while (src[i] != '\n' && src[i] != '\0')
 	{
-		concatenated[i] = s1[i];
+		dst[i] = src[i];
 		i++;
 	}
-	while (i < lens1 + lens2)
-	{
-		concatenated[i] = s2[i - lens1];
-		i++;
-	}
-	concatenated[i] = '\0';
-	return (concatenated);
+	return (i);
 }
 
 char	*extract_line(char *leftover)
 {
-	int		i;
 	int		len;
+	int		i;
 	char	*line;
 
 	len = 0;
@@ -81,15 +67,11 @@ char	*extract_line(char *leftover)
 		line = malloc(len + 1);
 	if (!line)
 		return (0);
-	i = 0;
-	while (leftover[i] != '\n' && leftover[i] != '\0')
-	{
-		line[i] = leftover[i];
-		i++;
-	}
+	i = copy_until_newline(line, leftover);
 	if (leftover[i] == '\n')
 	{
-		line[i] = '\n', i++;
+		line[i] = '\n';
+		i++;
 	}
 	line[i] = '\0';
 	return (line);
