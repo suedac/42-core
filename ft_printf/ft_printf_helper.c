@@ -6,103 +6,79 @@
 /*   By: zgahrama <zgahrama@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 13:21:55 by zgahrama          #+#    #+#             */
-/*   Updated: 2025/06/11 17:43:01 by zgahrama         ###   ########.fr       */
+/*   Updated: 2025/06/16 11:41:34 by zgahrama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-void print_hex_lower_case(unsigned int n)
+void	print_char(va_list args)
 {
-    char hex_digits[] = "0123456789abcdef";
-    char buf[9];
-    int i = 8;
-    buf[i] = '\0';
-    if (n == 0)
-        write(1, "0", 1);
+    char	c = (char)va_arg(args, int);
+    write(1, &c, 1);
+}
+
+void	print_str(va_list args)
+{
+    char	*s = va_arg(args, char *);
+    int		i = 0;
+
+    if (!s)
+        write(1, "(null)", 6);
     else
     {
-        while (n > 0)
-        {
-            buf[--i] = hex_digits[n % 16];
-            n /= 16;
-        }
-        write(1, &buf[i], 8 - i);
-    }
-}
-void print_hex_upper_case(unsigned int n)
-{
-    char hex_digits[] = "0123456789ABCDEF";
-    char buf[9];
-    int i = 8;
-    buf[i] = '\0';
-    if (n == 0)
-        write(1, "0", 1);
-    else
-    {
-        while (n > 0)
-        {
-            buf[--i] = hex_digits[n % 16];
-            n /= 16;
-        }
-        write(1, &buf[i], 8 - i);
-    }
-}
-void check_arg(const char format, va_list args)
-{
-    int i;
-    if(format == 'c')
-    {
-        char c = (char)va_arg(args, int);
-        write(1, &c, 1);
-    }
-    else if(format == 's')
-    {
-        i = 0;
-        char *s = va_arg(args, char*);
-        while(s[i])
+        while (s[i])
         {
             write(1, &s[i], 1);
             i++;
         }
     }
-    else if(format == 'p')
+}
+
+void	print_ptr(va_list args)
+{
+    void			*p = va_arg(args, void *);
+    unsigned long	addr = (unsigned long)p;
+    char			hex[17];
+    int				i = 16;
+
+    write(1, "0x", 2);
+    hex[i] = '\0';
+    if (addr == 0)
+        write(1, "0", 1);
+    else
     {
-        void *p = va_arg(args, int*);
-        write(1, p, sizeof(void*));
+        while (addr > 0)
+        {
+            hex[--i] = "0123456789abcdef"[addr % 16];
+            addr /= 16;
+        }
+        write(1, &hex[i], 16 - i);
     }
-    else if(format == 'd')
-    {
-        double d = va_arg(args, double);
-        write(1, &d, sizeof(double));
-    }
-    else if(format == 'i')
-    {
-        int i = va_arg(args, int);
-        write(1, &i, sizeof(int));
-    }
-     else if(format == 'u')
-    {
-       double u = va_arg(args, double);
-       if(u < 0)
-       {
-            u = u * -1;
-       }
-        write(1, &u, sizeof(double));
-    }
+}
+
+void	print_percent(void)
+{
+    char	m = '%';
+    write(1, &m, 1);
+}
+
+void	check_arg(const char format, va_list args)
+{
+    if (format == 'c')
+        print_char(args);
+    else if (format == 's')
+        print_str(args);
+    else if (format == 'p')
+        print_ptr(args);
+    else if (format == 'i' || format == 'd')
+        print_number(va_arg(args, int));
+    else if (format == 'u')
+        print_unsigned(va_arg(args, unsigned int));
     else if (format == 'x')
-    {
-        unsigned int x = va_arg(args, unsigned int);
-        print_hex_lower_case(x);
-    }
+        print_hex_lower_case(va_arg(args, unsigned int));
     else if (format == 'X')
-    {
-        unsigned int x = va_arg(args, unsigned int);
-        print_hex_upper_case(x);
-    }
-    else if(format == '%')
-    {
-        char m = '%';
-        write(1, &m, 1);
-    }
+        print_hex_upper_case(va_arg(args, unsigned int));
+    else if (format == '%')
+        print_percent();
 }
