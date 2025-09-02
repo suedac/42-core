@@ -7,33 +7,25 @@ char	**read_input(void);
 int		rectangular(char **grid);
 int		check_walls(char **grid);
 int		map_checker(void);
+int		draw_map(void *win, void *mlx, t_map map);
 
 int	main(void)
 {
 	void *mlx;
 	void *win;
-	void *img_floor;
-    void *wall_up;
-    void *wall_down;
-    void *jaws_plant;
-    void *bones;
-	int w;
-	int h;
+	t_map map;
+	int TILE_SIZE = 32;
 
-    w = 32;
-    h = 32;
+	map.grid = read_input();
+	int width = get_map_width(map.grid);
+	int height = get_map_height(map.grid);
+	int win_width = width * TILE_SIZE;
+	int win_height = height * TILE_SIZE;
 	mlx = mlx_init();
-	win = mlx_new_window(mlx, 800, 600, "so_long");
+	win = mlx_new_window(mlx, win_width, win_height, "so_long");
+	map.grid = read_input();
 
-	img_floor = mlx_xpm_file_to_image(mlx, "textures/floor.xpm", &w, &h);
-	if (!img_floor)
-	{
-		printf("Failed to load wall.xpm\n");
-		return (1);
-	}
-
-	// Draw image at position (100, 100)
-	mlx_put_image_to_window(mlx, win, img_floor, 100, 100);
+	draw_map(win, mlx, map);
 
 	mlx_loop(mlx);
 	return (0);

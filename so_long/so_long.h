@@ -6,7 +6,7 @@
 /*   By: zgahrama <zgahrama@student.42prague.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 16:54:13 by zgahrama          #+#    #+#             */
-/*   Updated: 2025/08/28 13:31:19 by zgahrama         ###   ########.fr       */
+/*   Updated: 2025/09/01 13:31:12 by zgahrama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,5 +37,6 @@ int get_map_height(char **grid);
 void remove_newline(char *line);
 int	check_walls(char **grid);
 int	check_points(char **grid);
+int draw_map(void *win, void *mlx, t_map map);
 
 #endif

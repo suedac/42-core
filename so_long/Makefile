@@ -1,5 +1,5 @@
 NAME = so_long
-SRC = main.c read_input.c gnl/get_next_line.c gnl/get_next_line_utils.c map_checker.c
+SRC = main.c read_input.c gnl/get_next_line.c gnl/get_next_line_utils.c map_checker.c draw_map.c
 OBJ = $(SRC:.c=.o)
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
